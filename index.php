@@ -1,4 +1,6 @@
 <?php
+    require_once __DIR__ .'/functions.php';
+
 
     $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $numbers = '0123456789';
@@ -10,19 +12,7 @@
         $passwordCharacters = $_GET['password'];
         $password = generateRandomPassword($passwordCharacters, $allCharacters);
     }
-
-    // funzione che ci genererà la password casuale dall'array di caratteri scelti
-    function generateRandomPassword($length, $characters){
-        $password = '';
-        $charactersLenght = count($characters);
-        for($i = 0; $i < $length; $i++){
-            $password.= $characters[rand(0, $charactersLenght -1)];
-        }
-        return $password;
-    }
-
 ?>
-
 
 
 
@@ -49,7 +39,7 @@
                 <?php if(isset($passwordCharacters) && $passwordCharacters < 3){ ?>
                     <div class="alert alert-danger" role="alert">Caratteri minimi 4</div>
                 <?php }else{?>
-                    <div class="bg-primary text-white"><?php echo $password?></div>
+                    <div class="bg-primary text-white text-center fs-1 mt-5 p-4"><?php echo $password?></div>
                 <?php } ?>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
