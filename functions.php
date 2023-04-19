@@ -1,5 +1,4 @@
 <?php
-
     // funzione che ci genererà la password casuale dall'array di caratteri scelti
     function generateRandomPassword($length, $characters){
         $password = '';

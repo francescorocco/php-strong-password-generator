@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     require_once __DIR__ .'/functions.php';
 
 
@@ -8,10 +10,18 @@
 
     $allCharacters = array_merge(str_split($letters), str_split($numbers), str_split($symbols));
 
+    $newNumber = false;
+
     if(isset($_GET['password'])){
-        $passwordCharacters = $_GET['password'];
-        $password = generateRandomPassword($passwordCharacters, $allCharacters);
+        $passwordCharacters = (int)$_GET['password'];
+        if($passwordCharacters > 6){
+            $_SESSION['password'] = generateRandomPassword($passwordCharacters, $allCharacters);
+            header('Location: ./response.php');
+        }else{
+            $newNumber =true;
+        }
     }
+
 ?>
 
 
@@ -34,13 +44,13 @@
             <div class="mb-3">
                 <label for="password">Quanti caratteri deve contenere la password?</label>
                 <input type="number" class="form-control" id="password" name="password">
-                <!-- controllo se il numero inserito per la generazione
-                pasword è maggiore di 3 -->
-                <?php if(isset($passwordCharacters) && $passwordCharacters < 3){ ?>
-                    <div class="alert alert-danger" role="alert">Caratteri minimi 4</div>
-                <?php }else{?>
-                    <div class="bg-primary text-white text-center fs-1 mt-5 p-4"><?php echo $password?></div>
-                <?php } ?>
+
+                <?php if($newNumber){ ?>
+                    <div class="alert alert-danger" role="alert">Caratteri minimi 6</div>
+                <?php }?>
+                
+                
+
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
