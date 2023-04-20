@@ -1,26 +1,31 @@
 <?php
-    session_start();
+session_start();
 
-    require_once __DIR__ .'/functions.php';
+require_once __DIR__ . '/functions.php';
 
+// qui salvo le informazioni delle checkbox
+$uNumbers = isset($_GET['numbers']);
+$uLetters = isset($_GET['letters']);
+$uSpecialCharacters = isset($_GET['special']);
+$repeatCharacters = isset($_GET['repeat']);
 
-    $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $numbers = '0123456789';
-    $symbols = '!@#,.;:?(){}[]+-';
+$letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$numbers = '0123456789';
+$symbols = '!@#,.;:?(){}[]+-';
 
-    $allCharacters = array_merge(str_split($letters), str_split($numbers), str_split($symbols));
+$allCharacters = useCharacters($uNumbers, $uLetters, $uSpecialCharacters, $letters, $numbers, $symbols);
 
-    $newNumber = false;
+$newNumber = false;
 
-    if(isset($_GET['password'])){
-        $passwordCharacters = (int)$_GET['password'];
-        if($passwordCharacters > 6){
-            $_SESSION['password'] = generateRandomPassword($passwordCharacters, $allCharacters);
-            header('Location: ./response.php');
-        }else{
-            $newNumber =true;
-        }
+if (isset($_GET['passwordLenght'])) {
+    $passwordCharacters = (int)$_GET['passwordLenght'];
+    if ($passwordCharacters >= 6) {
+        $_SESSION['password'] = generateRandomPassword($passwordCharacters, $allCharacters, $repeatCharacters);
+        header('Location: ./response.php');
+    } else {
+        $newNumber = true;
     }
+}
 
 ?>
 
@@ -43,14 +48,38 @@
         <form method="GET" action="index.php">
             <div class="mb-3">
                 <label for="password">Quanti caratteri deve contenere la password?</label>
-                <input type="number" class="form-control" id="password" name="password">
+                <input type="number" class="form-control" id="password" name="passwordLenght">
 
-                <?php if($newNumber){ ?>
+                <?php if ($newNumber) { ?>
                     <div class="alert alert-danger" role="alert">Caratteri minimi 6</div>
-                <?php }?>
-                
-                
+                <?php } ?>
 
+                <div class="form-check">
+                    <h3>Ripetere caratteri?</h3>
+                    <input class="form-check-input" type="radio" name="repeat" id="repeat1" value="0" checked>
+                    <label class="form-check-label" for="repeat1">
+                        No
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="repeat" id="repeat2" value="1">
+                    <label class="form-check-label" for="repeat2">
+                        Si
+                    </label>
+                </div>
+                <h3>Scegliere quali caratteri utilizzare utilizzare</h3>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="numbers" value="1" name='numbers' checked>
+                    <label class="form-check-label" for="numbers">Numeri</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="letters" value="1" name="letters" checked>
+                    <label class="form-check-label" for="letters">Lettere</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="special" value="1" name="special" checked>
+                    <label class="form-check-label" for="special">Caratteri speciali</label>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
